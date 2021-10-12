@@ -280,5 +280,37 @@ $$
 
    
 
+   快排最坏情况下系统调用栈栈深度是$n - 1$，这在使用对某些对栈深度有要求的语言（如python，最大栈深度默认1000）和大部分语言栈空间不会太大的场景很可能造成栈溢出，所以可以对自顶向上的递归快排做改造，使用栈模拟系统调用栈。
+   
+   ```java
+   public void quickSort(int[] nums) {
+       int left = 0, right = nums.length;
+       if (right - left <= 1) return;
+       Queue<Integer> stack = new ArrayDeque<>();
+       stack.push(left);
+       stack.push(right);
+       int pivotIndex;
+       while (!stack.isEmpty()) {
+           right = stack.pop();
+           left = stack.pop();
+           pivotIndex = partition(nums, left, right);
+           if (right - pivotIndex >= 1) {
+               stack.push(pivotIndex + 1);
+       		stack.push(right);
+           }
+           if (pivotIndex - left >= 1) {
+               stack.push(left);
+       		stack.push(pivotIndex);
+           }
+       }
+   }
+   ```
+   
+   
+   
+   
+   
+   快排的非递归（且不用栈）写法的关键寻找一种原位方式，确定当前子序列左右边界的界限，这时对
+   
    
 
